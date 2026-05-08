@@ -1,0 +1,853 @@
+<!DOCTYPE html>
+<html lang="ru">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1.0">
+<title>Ottawa • 24–27 мая 2026</title>
+<link href="https://fonts.googleapis.com/css2?family=Playfair+Display:ital,wght@0,400;0,700;1,400&family=DM+Sans:wght@300;400;500&display=swap" rel="stylesheet">
+<style>
+  :root {
+    --ink:    #1a1a18;
+    --cream:  #f5f0e8;
+    --gold:   #c9a84c;
+    --green:  #2c4a3e;
+    --sage:   #5a7a6e;
+    --rust:   #b85c38;
+    --violet: #6b5b95;
+    --teal:   #2a7d6f;
+  }
+  * { margin:0; padding:0; box-sizing:border-box; }
+  body { font-family:'DM Sans',sans-serif; background:var(--cream); color:var(--ink); overflow-x:hidden; }
+
+  .hero {
+    min-height:100svh; background:var(--green);
+    display:flex; flex-direction:column; justify-content:flex-end;
+    padding:32px 24px; position:relative; overflow:hidden;
+  }
+  .hero::before {
+    content:''; position:absolute; inset:0;
+    background:url("data:image/svg+xml,%3Csvg width='60' height='60' viewBox='0 0 60 60' xmlns='http://www.w3.org/2000/svg'%3E%3Cg fill='none'%3E%3Cg fill='%23c9a84c' fill-opacity='0.06'%3E%3Cpath d='M36 34v-4h-2v4h-4v2h4v4h2v-4h4v-2h-4zm0-30V0h-2v4h-4v2h4v4h2V6h4V4h-4zM6 34v-4H4v4H0v2h4v4h2v-4h4v-2H6zM6 4V0H4v4H0v2h4v4h2V6h4V4H6z'/%3E%3C/g%3E%3C/g%3E%3C/svg%3E");
+  }
+  .hero-tag { font-size:10px; font-weight:500; letter-spacing:.18em; text-transform:uppercase; color:var(--gold); margin-bottom:10px; opacity:0; animation:fadeUp .8s .3s forwards; }
+  .hero h1 { font-family:'Playfair Display',serif; font-size:clamp(44px,12vw,80px); font-weight:700; color:var(--cream); line-height:.9; letter-spacing:-.02em; opacity:0; animation:fadeUp .8s .5s forwards; }
+  .hero h1 em { font-style:italic; color:var(--gold); }
+  .hero-sub { margin-top:14px; font-size:12px; color:rgba(245,240,232,.6); font-weight:300; letter-spacing:.05em; opacity:0; animation:fadeUp .8s .7s forwards; }
+  .hero-dates { margin-top:20px; display:flex; gap:8px; flex-wrap:wrap; opacity:0; animation:fadeUp .8s .9s forwards; }
+  .date-pill { background:rgba(201,168,76,.15); border:1px solid rgba(201,168,76,.4); color:var(--gold); font-size:11px; font-weight:500; letter-spacing:.06em; padding:6px 12px; border-radius:100px; }
+
+  .transit { background:var(--ink); padding:24px 16px; display:grid; grid-template-columns:1fr 1fr; gap:12px; }
+  .transit-card { background:rgba(255,255,255,.04); border:1px solid rgba(255,255,255,.08); border-radius:10px; padding:14px; }
+  .transit-dir { font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:var(--gold); margin-bottom:6px; }
+  .transit-route { font-family:'Playfair Display',serif; font-size:14px; color:var(--cream); margin-bottom:4px; }
+  .transit-time { font-size:22px; font-weight:300; color:white; letter-spacing:-.02em; }
+  .transit-detail { font-size:10px; color:rgba(245,240,232,.4); margin-top:3px; }
+
+  /* route map strip */
+  .route-strip { background:white; margin:0 12px; border-radius:10px; padding:10px 14px; box-shadow:0 1px 8px rgba(0,0,0,.06); border:1px solid rgba(0,0,0,.05); display:flex; align-items:center; gap:6px; flex-wrap:wrap; overflow:hidden; }
+  .route-strip-label { font-size:9px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; color:#aaa; width:100%; margin-bottom:3px; }
+  .route-dot { width:7px; height:7px; border-radius:50%; flex-shrink:0; }
+  .route-dash { flex:1; height:1px; background:repeating-linear-gradient(90deg,#ccc 0,#ccc 4px,transparent 4px,transparent 8px); min-width:8px; }
+  .route-place { font-size:10px; font-weight:500; color:var(--ink); white-space:nowrap; }
+
+  .section-header { padding:28px 24px 6px; display:flex; align-items:baseline; gap:12px; }
+  .section-num { font-family:'Playfair Display',serif; font-size:52px; font-weight:700; color:rgba(44,74,62,.1); line-height:1; flex-shrink:0; }
+  .section-title { font-family:'Playfair Display',serif; font-size:22px; font-weight:400; color:var(--green); }
+  .section-date { font-size:11px; color:#aaa; margin-top:2px; }
+
+  .day { margin:6px 12px 16px; border-radius:14px; overflow:hidden; background:white; box-shadow:0 1px 16px rgba(0,0,0,.06); }
+  .day-header { padding:16px 18px 14px; background:var(--green); display:flex; justify-content:space-between; align-items:flex-start; }
+  .day-header.rust   { background:var(--rust); }
+  .day-header.sage   { background:var(--sage); }
+  .day-header.ink    { background:#2a2a28; }
+  .day-header.violet { background:var(--violet); }
+  .day-label { font-size:9px; letter-spacing:.14em; text-transform:uppercase; color:rgba(245,240,232,.6); margin-bottom:4px; }
+  .day-name  { font-family:'Playfair Display',serif; font-size:24px; color:white; line-height:1; }
+  .day-name em { font-style:italic; color:var(--gold); }
+  .day-badge { background:rgba(255,255,255,.12); border:1px solid rgba(255,255,255,.2); color:white; font-size:10px; font-weight:500; padding:4px 10px; border-radius:100px; white-space:nowrap; flex-shrink:0; }
+
+  .timeline { padding:2px 16px 12px; }
+  .event { display:grid; grid-template-columns:46px 1fr; padding:11px 0; border-bottom:1px solid rgba(0,0,0,.05); position:relative; }
+  .event:last-child { border-bottom:none; }
+  .event-time { font-size:11px; font-weight:500; color:var(--sage); padding-top:2px; text-align:right; letter-spacing:-.01em; }
+  .event-dot  { position:absolute; left:57px; top:17px; width:7px; height:7px; border-radius:50%; background:var(--gold); z-index:1; }
+  .event-line { position:absolute; left:60px; top:24px; bottom:-2px; width:2px; background:rgba(201,168,76,.18); }
+  .event:last-child .event-line { display:none; }
+  .event-content { padding-left:17px; }
+
+  .event-type { display:inline-block; font-size:8px; font-weight:600; letter-spacing:.1em; text-transform:uppercase; padding:2px 7px; border-radius:4px; margin-bottom:4px; }
+  .type-sight   { background:rgba(44,74,62,.1);    color:var(--green); }
+  .type-food    { background:rgba(184,92,56,.12);   color:var(--rust); }
+  .type-bar     { background:rgba(107,91,149,.12);  color:var(--violet); }
+  .type-bakery  { background:rgba(201,168,76,.15);  color:#8b6914; }
+  .type-gelato  { background:rgba(184,92,56,.08);   color:#a04020; }
+  .type-walk    { background:rgba(90,122,110,.12);  color:var(--sage); }
+  .type-transit { background:rgba(26,26,24,.08);    color:#666; }
+  .type-special { background:rgba(42,125,111,.12);  color:var(--teal); }
+  .type-home    { background:rgba(201,168,76,.1);   color:#7a6020; }
+
+  .event-title { font-family:'Playfair Display',serif; font-size:15px; font-weight:400; color:var(--ink); margin-bottom:3px; line-height:1.2; }
+  .event-desc  { font-size:11.5px; color:#666; line-height:1.4; font-weight:300; }
+  .event-tip   { display:flex; align-items:flex-start; gap:5px; margin-top:5px; background:rgba(201,168,76,.08); border-left:2px solid var(--gold); padding:5px 8px; border-radius:0 5px 5px 0; font-size:10.5px; color:#7a6020; line-height:1.35; }
+  .event-tip.warn { background:rgba(184,92,56,.07); border-color:var(--rust); color:#8a3820; }
+  .price-tag { display:inline-block; margin-top:4px; font-size:10px; font-weight:500; color:var(--sage); background:rgba(90,122,110,.08); padding:2px 7px; border-radius:4px; }
+
+  /* walk connector */
+  .walk-connector { margin:0 16px; display:flex; align-items:center; gap:6px; padding:4px 0; }
+  .walk-line { flex:1; height:1px; border-top:1.5px dashed rgba(90,122,110,.35); }
+  .walk-label { font-size:9px; color:var(--sage); font-weight:500; white-space:nowrap; }
+
+  .tips { background:var(--green); margin:0 12px 20px; border-radius:14px; padding:18px 16px; }
+  .tips h2 { font-family:'Playfair Display',serif; font-size:18px; color:var(--cream); margin-bottom:12px; }
+  .tip-item { display:flex; gap:10px; padding:8px 0; border-bottom:1px solid rgba(255,255,255,.08); }
+  .tip-item:last-child { border-bottom:none; }
+  .tip-icon { font-size:15px; flex-shrink:0; margin-top:1px; }
+  .tip-text { font-size:11.5px; color:rgba(245,240,232,.8); line-height:1.4; }
+  .tip-text strong { color:var(--gold); font-weight:500; display:block; margin-bottom:1px; }
+
+  footer { background:var(--ink); padding:24px; text-align:center; }
+  footer .maple { font-size:28px; margin-bottom:6px; }
+  footer p { font-family:'Playfair Display',serif; font-size:12px; font-style:italic; color:rgba(245,240,232,.4); }
+
+  @keyframes fadeUp { from{opacity:0;transform:translateY(24px)} to{opacity:1;transform:translateY(0)} }
+
+  @media print {
+    /* Hero occupies first page fully */
+    .hero {
+      page-break-after: always;
+      break-after: page;
+      min-height: 100vh;
+      height: 100vh;
+    }
+
+    /* Each day section starts on a new page */
+    .section-header {
+      page-break-before: always;
+      break-before: page;
+      padding-top: 32px;
+    }
+
+    /* Keep route strip with the day block */
+    .route-strip {
+      page-break-inside: avoid;
+      break-inside: avoid;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    /* Keep day header with first event */
+    .day {
+      page-break-inside: auto;
+      break-inside: auto;
+    }
+    .day-header {
+      page-break-inside: avoid;
+      break-inside: avoid;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    /* Each event block stays whole */
+    .event {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Walk connectors stay with the next event */
+    .walk-connector {
+      page-break-inside: avoid;
+      break-inside: avoid;
+      page-break-after: avoid;
+      break-after: avoid;
+    }
+
+    /* Tips and footer */
+    .tips {
+      page-break-before: always;
+      break-before: page;
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    .tip-item {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+    footer {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Transit block */
+    .transit {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+
+    /* Prevent orphaned tips and price tags */
+    .event-tip, .price-tag {
+      page-break-inside: avoid;
+      break-inside: avoid;
+    }
+  }</style>
+</head>
+<body>
+
+<!-- HERO -->
+<section class="hero">
+  <div class="hero-tag">Путешествие · Nikita & Maksim</div>
+  <h1>Ot<em>ta</em>wa</h1>
+  <p class="hero-sub">31 Rue Richelieu, Gatineau · 3.5 дня · Megabus</p>
+  <div class="hero-dates">
+    <div class="date-pill">📅 24–27 мая 2026</div>
+    <div class="date-pill">🏠 Check-in 16:00–17:00</div>
+    <div class="date-pill">🔑 Checkout 10:00</div>
+  </div>
+</section>
+
+<!-- TRANSIT -->
+<div class="transit">
+  <div class="transit-card">
+    <div class="transit-dir">↗ В Оттаву</div>
+    <div class="transit-route">Toronto → Ottawa</div>
+    <div class="transit-time">08:00</div>
+    <div class="transit-detail">Вс 24 мая · Union Stn</div>
+    <div class="transit-detail">Прибытие 13:45 · St. Laurent</div>
+  </div>
+  <div class="transit-card">
+    <div class="transit-dir">↙ В Торонто</div>
+    <div class="transit-route">Ottawa → Toronto</div>
+    <div class="transit-time">17:55</div>
+    <div class="transit-detail">Ср 27 мая · Platform E</div>
+    <div class="transit-detail">Прибытие 23:59 · Union Stn</div>
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     DAY 1 · ВОСКРЕСЕНЬЕ 24 МАЯ
+══════════════════════════════════════ -->
+<div class="section-header">
+  <div class="section-num">1</div>
+  <div>
+    <div class="section-title">Воскресенье, 24 мая</div>
+    <div class="section-date">Приезд · один обед · прогулка · заселение</div>
+  </div>
+</div>
+
+<!-- Маршрут дня 1 -->
+<div class="route-strip" style="margin-top:12px">
+  <div class="route-strip-label">Маршрут дня</div>
+  <div class="route-dot" style="background:#c9a84c"></div>
+  <div class="route-place">St. Laurent</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#b85c38"></div>
+  <div class="route-place">ByWard Market</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#2c4a3e"></div>
+  <div class="route-place">Parliament Hill</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#6b5b95"></div>
+  <div class="route-place">Апартаменты</div>
+</div>
+
+<div class="day" style="margin-top:12px">
+  <div class="day-header">
+    <div>
+      <div class="day-label">День первый · Приезд</div>
+      <div class="day-name">Пер<em>вые</em> впечатления</div>
+    </div>
+    <div class="day-badge">13:45 → ~17:00</div>
+  </div>
+  <div class="timeline">
+
+    <div class="event">
+      <div class="event-time">13:45</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-transit">🚇 Метро</span>
+        <div class="event-title">O-Train: St. Laurent → Rideau Station</div>
+        <div class="event-desc">Прямо с платформы автобуса — спускаемся в метро. Confederation Line запад → Rideau Station. ~10 мин, без пересадок. Выход — прямо у ByWard Market.</div>
+        <div class="event-tip">💳 Тапаем банковской картой или Presto · $4.10 каждый · Rideau Station = 5 мин пешком до Lavender Grill</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">14:15</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-food">Обед</span>
+        <div class="event-title">💜 Lavender Grill — первый обед</div>
+        <div class="event-desc">47 Clarence St · Прямо в ByWard Market. Рейтинг ★ 4.6. Паста, стейк, коктейли, красивый интерьер с фиолетовым светом. Открыт с 11:00 в воскресенье.</div>
+        <div class="event-tip">📞 +1 613-569-6605 · Можно зайти без брони, но лучше написать заранее</div>
+        <div class="price-tag">💰 ~$55–70 на двоих</div>
+      </div>
+    </div>
+
+    <div class="walk-connector">
+      <div class="walk-line"></div>
+      <div class="walk-label">🚶 5 мин пешком</div>
+      <div class="walk-line"></div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">15:30</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-walk">Прогулка</span>
+        <div class="event-title">🧭 ByWard Market — первые шаги</div>
+        <div class="event-desc">Старейший рынок Канады. Пекарни, цветы, сувениры, кофе на ходу. Неспешно — просто впитываете атмосферу города.</div>
+      </div>
+    </div>
+
+    <div class="walk-connector">
+      <div class="walk-line"></div>
+      <div class="walk-label">🚶 7 мин пешком</div>
+      <div class="walk-line"></div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">16:00</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-walk">Прогулка</span>
+        <div class="event-title">🏛 Parliament Hill + Major's Hill Park</div>
+        <div class="event-desc">Первый вид на Parliament Hill, Peace Tower, Вечный огонь. Major's Hill Park — лучший ракурс для фото: парламент + река в одном кадре.</div>
+        <div class="event-tip">📸 Снимайте с холма у реки — лучший кадр Оттавы</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">16:45</div>
+      <div class="event-dot"></div>
+      <div class="event-content">
+        <span class="event-type type-home">Заселение</span>
+        <div class="event-title">🏠 Uber → 31 Rue Richelieu, Gatineau</div>
+        <div class="event-desc">От Parliament Hill до апартаментов — ~10 мин, ~$12 CAD. Заселяемся, распаковываемся, отдыхаем. Вечер свободный — город завтра.</div>
+        <div class="event-tip">✅ Check-in с 16:00 · Хозяин Jonathan · Отдых после дороги</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     DAY 2 · ПОНЕДЕЛЬНИК 25 МАЯ
+══════════════════════════════════════ -->
+<div class="section-header">
+  <div class="section-num">2</div>
+  <div>
+    <div class="section-title">Понедельник, 25 мая</div>
+    <div class="section-date">Bakery → Парламент → Галерея → ByWard → Итальянский ужин → Бар</div>
+  </div>
+</div>
+
+<div class="route-strip" style="margin-top:12px">
+  <div class="route-strip-label">Маршрут дня · Александра Бридж → центр → ByWard → Hintonburg → домой</div>
+  <div class="route-dot" style="background:#c9a84c"></div>
+  <div class="route-place">Завтрак дома</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#2c4a3e"></div>
+  <div class="route-place">Сенат 10:10</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#2c4a3e"></div>
+  <div class="route-place">Gallery</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#b85c38"></div>
+  <div class="route-place">ByWard</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#b85c38"></div>
+  <div class="route-place">Farinella 🍕</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#6b5b95"></div>
+  <div class="route-place">Bar Lupulus</div>
+</div>
+
+<div class="day" style="margin-top:12px">
+  <div class="day-header rust">
+    <div>
+      <div class="day-label">День второй · Полный день</div>
+      <div class="day-name">Ита<em>лия</em> & история</div>
+    </div>
+    <div class="day-badge">Тур 10:10 → поздно</div>
+  </div>
+  <div class="timeline">
+
+    <div class="event">
+      <div class="event-time">09:00</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-home">🏠 Дома</span>
+        <div class="event-title">Завтрак дома — апартаменты</div>
+        <div class="event-desc">Спокойное утро в Gatineau. Завтрак дома перед насыщенным днём.</div>
+        <div class="event-tip">⏰ Выехать из дома в <strong>9:25</strong> — Uber через Alexandra Bridge ~15 мин, ~$14 CAD</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">09:45</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-transit">Прибытие</span>
+        <div class="event-title">🏛 Senate of Canada Building — 2 Rideau St</div>
+        <div class="event-desc">Прибыть за 25 минут до начала — проход через охрану и регистрацию. Билет: #2760173 и #2760174. Язык: English.</div>
+        <div class="event-tip warn">⚠️ Один рюкзак/сумка не более 35.5×30.5×19 см · Паспорт при себе</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">10:10</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-sight">Экскурсия · Бесплатно</span>
+        <div class="event-title">🏛 Senate Guided Tour — начало</div>
+        <div class="event-desc">Здание 1912 года — бывший главный вокзал Оттавы, теперь временный Сенат. Красный зал, история верхней палаты парламента. ~35–40 минут.</div>
+      </div>
+    </div>
+
+    <div class="walk-connector">
+      <div class="walk-line"></div>
+      <div class="walk-label">🚶 8 мин пешком вдоль реки</div>
+      <div class="walk-line"></div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">11:00</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-sight">Музей</span>
+        <div class="event-title">🖼 National Gallery of Canada</div>
+        <div class="event-desc">380 Sussex Dr · 8 мин пешком от Сената вдоль реки. Стеклянная башня, виды на Ottawa River. Канадское, индейское и мировое искусство. ~2 часа.</div>
+        <div class="price-tag">💰 Вход ~$15/чел.</div>
+      </div>
+    </div>
+
+    <div class="walk-connector">
+      <div class="walk-line"></div>
+      <div class="walk-label">🚶 5 мин пешком</div>
+      <div class="walk-line"></div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">13:00</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-walk">Обед</span>
+        <div class="event-title">🧇 ByWard Market + BeaverTails</div>
+        <div class="event-desc">5 мин пешком от Gallery. BeaverTails — жареное тесто с кленовым сиропом, символ Оттавы. Кофе, сувениры, атмосфера.</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">14:30</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-special">⛵ Бонус</span>
+        <div class="event-title">Ottawa Palapa Tours — тики-лодка</div>
+        <div class="event-desc">1 Canal Ln · 7 мин пешком от ByWard Market. Рейтинг ★ 4.9. Прогулка на тики-лодке по реке: музыка, напитки, вид на Parliament с воды. 2 часа. Открылись 15 мая.</div>
+        <div class="event-tip">💡 Опционально — если хочется особого опыта. Бронировать заранее!</div>
+        <div class="price-tag">💰 ~$50–60/чел.</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">18:00</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-transit">🚇 Метро</span>
+        <div class="event-title">O-Train: Rideau → Pimisi Station</div>
+        <div class="event-desc">От ByWard Market 5 мин пешком до Rideau Station → O-Train запад → Pimisi Station (Hintonburg). ~8 мин, $4.10 каждый. От Pimisi пешком ~15 мин до Farinella по Wellington St.</div>
+        <div class="event-tip">💡 Альтернатива — Uber ~$10 от ByWard прямо до двери Farinella</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">18:30</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-food">🍕 Ужин · ПРИОРИТЕТ</span>
+        <div class="event-title">Farinella Rochester — итальянская пицца</div>
+        <div class="event-desc">492 Rochester St, Hintonburg · Roman-style пицца в метр на вес. Тонкое тесто, свежие ингредиенты. <strong>Попробуйте веганское шоколадное мороженое</strong> здесь же.</div>
+        <div class="event-tip">★ 4.7 · Открыты до 22:00 в понедельник</div>
+        <div class="price-tag">💰 ~$40–55 на двоих</div>
+      </div>
+    </div>
+
+    <div class="walk-connector">
+      <div class="walk-line"></div>
+      <div class="walk-label">🚶 5 мин пешком по Wellington St</div>
+      <div class="walk-line"></div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">20:00</div>
+      <div class="event-dot"></div>
+      <div class="event-content">
+        <span class="event-type type-bar">Бар</span>
+        <div class="event-title">🍺 Bar Lupulus — крафт и коктейли</div>
+        <div class="event-desc">1242 Wellington St W · <strong>5 мин пешком от Farinella</strong> по той же улице. Craft beer + нестандартные коктейли. Уютный дворик. Рейтинг ★ 4.7 (1487 отзывов).</div>
+        <div class="event-tip warn">⚠️ Закрывается в 22:30 в понедельник · Uber домой через Portage Bridge ~12 мин</div>
+        <div class="price-tag">💰 ~$35–50 на двоих</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     DAY 3 · ВТОРНИК 26 МАЯ
+══════════════════════════════════════ -->
+<div class="section-header">
+  <div class="section-num">3</div>
+  <div>
+    <div class="section-title">Вторник, 26 мая</div>
+    <div class="section-date">Les Moulins → Музей природы → Музей истории → Галерея → Ужин → Бар</div>
+  </div>
+</div>
+
+<div class="route-strip" style="margin-top:12px">
+  <div class="route-strip-label">Маршрут дня · Centretown → Гатино (пешком) → Оттава (мост) → вечер</div>
+  <div class="route-dot" style="background:#c9a84c"></div>
+  <div class="route-place">Cocotte ☕</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#2c4a3e"></div>
+  <div class="route-place">Museum of Nature</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#b85c38"></div>
+  <div class="route-place">Coqlicorne 🍽</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#2c4a3e"></div>
+  <div class="route-place">Museum of History</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#2c4a3e"></div>
+  <div class="route-place">Gallery Silent Disco</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#b85c38"></div>
+  <div class="route-place">Anabella's</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#6b5b95"></div>
+  <div class="route-place">Rabbit Hole</div>
+</div>
+
+<div class="day" style="margin-top:12px">
+  <div class="day-header sage">
+    <div>
+      <div class="day-label">День третий · Полный день</div>
+      <div class="day-name">Му<em>зеи</em> & вечер</div>
+    </div>
+    <div class="day-badge">09:00 → поздно</div>
+  </div>
+  <div class="timeline">
+
+    <div class="event">
+      <div class="event-time">09:00</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-food">☕ Завтрак</span>
+        <div class="event-title">Cocotte Bistro — завтрак</div>
+        <div class="event-desc">123 Metcalfe St · Uber от апартаментов ~15 мин. Открыт с 7:00 утра. Яйца Бенедикт, крок-мадам, свежий кофе. Французский бистро прямо у Museum of Nature.</div>
+        <div class="event-tip">🚶 400 метров пешком до следующей точки — Museum of Nature</div>
+        <div class="price-tag">💰 ~$45–60 на двоих</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">10:30</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-sight">Музей</span>
+        <div class="event-title">🦕 Canadian Museum of Nature</div>
+        <div class="event-desc">240 McLeod St · 8 мин пешком от Cocotte. Викторианское здание 1905 г. Динозавры, арктические экспозиции, минералы. ~2 часа.</div>
+        <div class="price-tag">💰 Вход ~$20/чел.</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">13:00</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-transit">Транспорт</span>
+        <div class="event-title">Uber → Gatineau</div>
+        <div class="event-desc">От Музея природы до Гатино — ~10 мин, ~$14 CAD через Alexandra Bridge.</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">13:15</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-food">Обед</span>
+        <div class="event-title">🇫🇷 Bistro Coqlicorne — обед</div>
+        <div class="event-desc">59 Rue Laval, Gatineau · Рейтинг ★ 4.6. Французская кухня — утка, тартар, гриль-сэндвич. Открыт с 11:30 во вторник.</div>
+        <div class="event-tip">🚶 700 метров пешком до Canadian Museum of History</div>
+        <div class="price-tag">💰 ~$50–65 на двоих</div>
+      </div>
+    </div>
+
+    <div class="walk-connector">
+      <div class="walk-line"></div>
+      <div class="walk-label">🚶 700 м · 9 мин пешком</div>
+      <div class="walk-line"></div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">15:00</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-sight">Музей · Гатино</span>
+        <div class="event-title">🇨🇦 Canadian Museum of History</div>
+        <div class="event-desc">100 Laurier St, Gatineau · 9 мин пешком от Bistro Coqlicorne. Самый посещаемый музей Канады. История от First Peoples до наших дней. Потрясающая архитектура.</div>
+        <div class="price-tag">💰 Вход ~$22/чел.</div>
+      </div>
+    </div>
+
+    <div class="walk-connector">
+      <div class="walk-line"></div>
+      <div class="walk-label">🚶 12 мин пешком через Alexandra Bridge</div>
+      <div class="walk-line"></div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">17:30</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-special">✨ Специальное событие</span>
+        <div class="event-title">National Gallery — Silent Disco</div>
+        <div class="event-desc">380 Sussex Dr · 12 мин пешком через мост от Museum of History. По отзывам 26 мая — Silent Disco: 80s/90s/00s в наушниках, напитки, арт-столы. Уникальный вечер в музее.</div>
+        <div class="event-tip">🎉 По четвергам с 17:00 — вход в галерею бесплатный. 26 мая — вторник, но событие стоит входа</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">19:30</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-food">Ужин</span>
+        <div class="event-title">🌿 Anabella's Kitchen & Lounge</div>
+        <div class="event-desc">268 Preston St · Uber ~10 мин от National Gallery. Рейтинг ★ 4.9 — высший в нашем списке. Авторские коктейли, паста, ягнёнок, стейк. Идеально для особого вечера вдвоём.</div>
+        <div class="event-tip warn">⚠️ Работает только Вт–Сб · Бронировать: +1 613-913-7815</div>
+        <div class="price-tag">💰 ~$90–120 на двоих</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">21:30</div>
+      <div class="event-dot"></div>
+      <div class="event-content">
+        <span class="event-type type-bar">Бар</span>
+        <div class="event-title">🐰 Rabbit Hole — коктейли</div>
+        <div class="event-desc">208 Sparks St · Uber ~5 мин от Anabella's. Стильный бар на пешеходной улице. Устрицы, оригинальные коктейли. Уютные кабинки Jackalope. До полуночи во вторник.</div>
+        <div class="price-tag">💰 ~$40–60 на двоих · Uber домой ~12 мин</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- ══════════════════════════════════════
+     DAY 4 · СРЕДА 27 МАЯ
+══════════════════════════════════════ -->
+<div class="section-header">
+  <div class="section-num">4</div>
+  <div>
+    <div class="section-title">Среда, 27 мая</div>
+    <div class="section-date">Checkout 10:00 · автобус 17:55 · ~7 свободных часов</div>
+  </div>
+</div>
+
+<div class="route-strip" style="margin-top:12px">
+  <div class="route-strip-label">Маршрут дня · Всё в пешей доступности от Parliament Hill</div>
+  <div class="route-dot" style="background:#c9a84c"></div>
+  <div class="route-place">Завтрак дома</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#2c4a3e"></div>
+  <div class="route-place">Ottawa Locks</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#2c4a3e"></div>
+  <div class="route-place">Château Laurier</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#2c4a3e"></div>
+  <div class="route-place">Notre-Dame</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#b85c38"></div>
+  <div class="route-place">Cocotte 🍽</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#b85c38"></div>
+  <div class="route-place">Piccolo Grande 🍦</div>
+  <div class="route-dash"></div>
+  <div class="route-dot" style="background:#1a1a18"></div>
+  <div class="route-place">🚇 Rideau → St. Laurent</div>
+</div>
+
+<div class="day" style="margin-top:12px">
+  <div class="day-header ink">
+    <div>
+      <div class="day-label">День четвёртый · Отъезд</div>
+      <div class="day-name">По<em>следний</em> день</div>
+    </div>
+    <div class="day-badge">Checkout 10:00 → 17:55</div>
+  </div>
+  <div class="timeline">
+
+    <div class="event">
+      <div class="event-time">09:00</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-home">🏠 Дома</span>
+        <div class="event-title">Завтрак дома</div>
+        <div class="event-desc">Спокойное утро, собираем вещи, сдаём ключи Jonathanu в 10:00. Uber до Parliament Hill ~12 мин, ~$14.</div>
+      </div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">10:30</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-sight">Прогулка</span>
+        <div class="event-title">⚙️ Ottawa Locks — шлюзы Rideau Canal</div>
+        <div class="event-desc">Прямо у подножия Parliament Hill. Исторические шлюзы 1832 года — суда поднимаются и опускаются между рекой и каналом. Утром почти без толпы. Bytown Museum рядом.</div>
+        <div class="event-tip">📸 Вид снизу на Parliament Hill + шлюзы = лучший необычный кадр Оттавы</div>
+      </div>
+    </div>
+
+    <div class="walk-connector">
+      <div class="walk-line"></div>
+      <div class="walk-label">🚶 5 мин пешком</div>
+      <div class="walk-line"></div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">11:00</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-sight">Архитектура</span>
+        <div class="event-title">🏰 Château Laurier — замок Оттавы</div>
+        <div class="event-desc">Iconic готический отель 1912 года прямо у Parliament Hill. Зайдите внутрь — лобби с витражами и деревянными панелями. Бесплатно просто войти и посмотреть.</div>
+        <div class="event-tip">💡 Один из самых фотогеничных отелей Канады</div>
+      </div>
+    </div>
+
+    <div class="walk-connector">
+      <div class="walk-line"></div>
+      <div class="walk-label">🚶 6 мин пешком по Sussex Dr</div>
+      <div class="walk-line"></div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">11:45</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-sight">Собор</span>
+        <div class="event-title">⛪ Notre-Dame Cathedral Basilica</div>
+        <div class="event-desc">385 Sussex Dr · Старейший собор Оттавы (1847). Неоготический интерьер с золотыми алтарями. Бесплатный вход. ~15 мин осмотра.</div>
+      </div>
+    </div>
+
+    <div class="walk-connector">
+      <div class="walk-line"></div>
+      <div class="walk-label">🚶 8 мин через ByWard Market</div>
+      <div class="walk-line"></div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">12:15</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-food">🍽 Обед</span>
+        <div class="event-title">Cocotte Bistro — обед</div>
+        <div class="event-desc">123 Metcalfe St · 8 мин от собора. Рейтинг ★ 4.4. Французский бистро — яйца Бенедикт, стейк-фрит, устрицы. Открыт с 7:00 в среду.</div>
+        <div class="price-tag">💰 ~$55–70 на двоих</div>
+      </div>
+    </div>
+
+    <div class="walk-connector">
+      <div class="walk-line"></div>
+      <div class="walk-label">🚶 10 мин до ByWard Market</div>
+      <div class="walk-line"></div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">14:00</div>
+      <div class="event-dot"></div><div class="event-line"></div>
+      <div class="event-content">
+        <span class="event-type type-gelato">🍦 Джелато</span>
+        <div class="event-title">Piccolo Grande + прогулка по ByWard</div>
+        <div class="event-desc">55 Murray St · Манго, маракуйя, кокос. Открыт с 13:00 в среду. Прогулка по ByWard Market — атмосфера, кофе, никакой спешки.</div>
+        <div class="price-tag">💰 ~$16–20 на двоих</div>
+      </div>
+    </div>
+
+    <div class="walk-connector">
+      <div class="walk-line"></div>
+      <div class="walk-label">🚶 5 мин до Rideau Station</div>
+      <div class="walk-line"></div>
+    </div>
+
+    <div class="event">
+      <div class="event-time">16:00</div>
+      <div class="event-dot"></div>
+      <div class="event-content">
+        <span class="event-type type-transit">🚇 Метро · Отъезд</span>
+        <div class="event-title">O-Train: Rideau → St. Laurent Station</div>
+        <div class="event-desc">~8 мин, прямой маршрут. Надёжнее Uber в час пик среды. На платформе E в 17:40. Автобус 17:55.</div>
+        <div class="event-tip warn">⚠️ Выходите в 16:00 — запас 1 час 40 мин до отправления</div>
+      </div>
+    </div>
+
+  </div>
+</div>
+
+
+<!-- TIPS -->
+<div class="tips">
+  <h2>Ключевые заметки 🍁</h2>
+
+  <div class="tip-item">
+    <div class="tip-icon">🌉</div>
+    <div class="tip-text">
+      <strong>Два моста — два района</strong>
+      Portage Bridge → Wellington West / Hintonburg (пекарни, Farinella, Bar Lupulus). Alexandra Bridge → ByWard Market / Parliament / Gallery. Каждый день используете тот, что ближе к маршруту.
+    </div>
+  </div>
+
+  <div class="tip-item">
+    <div class="tip-icon">🍕</div>
+    <div class="tip-text">
+      <strong>Итальянский ужин — День 2 (пн)</strong>
+      Farinella Rochester + Bar Lupulus — 5 мин пешком друг от друга на Wellington St W. Один Uber туда и один домой.
+    </div>
+  </div>
+
+  <div class="tip-item">
+    <div class="tip-icon">☕</div>
+    <div class="tip-text">
+      <strong>Пекарни по дням</strong>
+      Пн → завтрак дома · Вт → Amandine Pâtisserie (открыта каждый день!) · Ср → Chesterfield's ★4.7 (лучший завтрак!) · Les Moulins La Fayette — только среда и далее, закрыта вт.
+    </div>
+  </div>
+
+  <div class="tip-item">
+    <div class="tip-icon">⛵</div>
+    <div class="tip-text">
+      <strong>Palapa Tours — тики-лодка (День 2)</strong>
+      У Ottawa Locks рядом с National Gallery. Рейтинг ★ 4.9. Бронировать заранее на сайте. Если решите взять — отличный бонус после ByWard Market.
+    </div>
+  </div>
+
+  <div class="tip-item">
+    <div class="tip-icon">📍</div>
+    <div class="tip-text">
+      <strong>Bistro Coqlicorne — бонус рядом с домом</strong>
+      59 Rue Laval, Gatineau · 1.5 км от апартаментов. Рейтинг ★ 4.6. Открыт Вт–Сб с 11:30. Если устанете ехать в Оттаву — отличный вариант поужинать в пешей доступности.
+    </div>
+  </div>
+</div>
+
+<footer>
+  <div class="maple">🍁</div>
+  <p>Ottawa · May 24–27, 2026 · Bon voyage, Nike & Maksim</p>
+</footer>
+
+</body>
+</html>
